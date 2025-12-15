@@ -1,0 +1,16 @@
+# Image Caption Generator - Requirements
+# Python 3.8+
+
+# Core Deep Learning
+tensorflow>=2.14.0,<2.20.0
+keras>=2.14.0
+
+# Gradio for GUI
+gradio>=4.0.0
+
+# Image processing
+Pillow>=10.0.0
+numpy>=1.24.0
+
+# Progress bar (optional, for better UX)
+tqdm>=4.65.0
