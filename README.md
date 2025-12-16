@@ -1,4 +1,4 @@
-# 🖼️ Image Caption Generator
+# Image Caption Generator
 ### *Turn Images into Words with Deep Learning*
 
 ![Project Status](https://img.shields.io/badge/Status-Completed-brightgreen?style=flat-square)
@@ -10,22 +10,22 @@ A comprehensive Deep Learning project that combines **Computer Vision** and **Na
 
 ---
 
-## � Table of Contents
-- [Project Overview](#-project-overview)
-- [🧠 Part 1: Model Training (The Notebook)](#-part-1-model-training-the-notebook)
+## Table of Contents
+- [Project Overview](#project-overview)
+- [Part 1: Model Training (The Notebook)](#part-1-model-training-the-notebook)
     - [Architecture](#architecture)
     - [Dataset](#dataset)
     - [Training Workflow](#training-workflow)
-- [✨ Part 2: Detection App (The GUI)](#-part-2-detection-app-the-gui)
+- [Part 2: Detection App (The GUI)](#part-2-detection-app-the-gui)
     - [Features](#features)
     - [Installation](#installation)
     - [Usage](#usage)
-- [📂 Project Structure](#-project-structure)
-- [⚖️ License](#-license)
+- [Project Structure](#project-structure)
+- [License](#license)
 
 ---
 
-## 🚀 Project Overview
+## Project Overview
 
 This project implements an **Encoder-Decoder** architecture to solve the image captioning problem. The model learns to recognize visual content in an image and translate it into a coherent English sentence.
 
@@ -37,7 +37,7 @@ This project implements an **Encoder-Decoder** architecture to solve the image c
 
 ---
 
-## 🧠 Part 1: Model Training (The Notebook)
+## Part 1: Model Training (The Notebook)
 
 The file `Image_Caption_Generator.ipynb` contains the complete end-to-end training pipeline, designed to run on **Google Colab**.
 
@@ -71,15 +71,15 @@ We utilize a **Merge Architecture**:
 
 ---
 
-## ✨ Part 2: Detection App (The GUI)
+## Part 2: Detection App (The GUI)
 
 The `app.py` file launches a stunning, dark-themed web interface to test the model in real-time.
 
 ### Features
-*   ✅ **Beam Search Decoding:** Selectable beam width (1-5) for higher quality captions compared to greedy search.
-*   ✅ **CPU Optimized:** Runs efficiently on local machines without needing a GPU.
-*   ✅ **Interactive UI:** Drag-and-drop image upload with instant generation.
-*   ✅ **Modern Design:** Glassmorphism aesthetics with smooth animations.
+*   **Beam Search Decoding:** Selectable beam width (1-5) for higher quality captions compared to greedy search.
+*   **CPU Optimized:** Runs efficiently on local machines without needing a GPU.
+*   **Interactive UI:** Drag-and-drop image upload with instant generation.
+*   **Modern Design:** Glassmorphism aesthetics with smooth animations.
 
 ### Installation
 
@@ -109,28 +109,25 @@ python app.py
 
 ---
 
-## � Project Structure
+## Project Structure
 
 ```bash
 Image_Caption_GUI/
-├── Image_Caption_Generator.ipynb  # 📓 Training Notebook (The Brain)
-├── app.py                         # 🚀 Gradio Application (The Interface)
-├── requirements.txt               # 📦 Dependencies
+├── Image_Caption_Generator.ipynb  # Training Notebook (The Brain)
+├── app.py                         # Gradio Application (The Interface)
+├── requirements.txt               # Dependencies
 ├── model/
 │   ├── best_model.keras           # Trained Model
 │   └── image_features.pkl         # (Optional) Pre-computed features
-├── examples/                      # 🖼️ Sample images for testing
-├── tokenizer.pkl                  # 🔤 Word Tokenizer object
-├── model_config.pkl               # ⚙️ Configuration (max_length, vocab_size)
-└── README.md                      # 📄 This file
+├── examples/                      # Sample images for testing
+├── tokenizer.pkl                  # Word Tokenizer object
+├── model_config.pkl               # Configuration (max_length, vocab_size)
+└── README.md                      # This file
 ```
 
 ---
 
-## ⚖️ License
+## License
 This project is for educational purposes as part of a Deep Learning course.
 *   Dataset: [Flickr8k Terms of Use](https://forms.illinois.edu/sec/1713398)
 *   Model: Custom implementation using TensorFlow/Keras.
-
----
-*Created with ❤️ by Ahmed Alshafeay*
