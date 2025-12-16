@@ -1,227 +1,136 @@
-# Image Caption Generator - Gradio GUI
+# 🖼️ Image Caption Generator
+### *Turn Images into Words with Deep Learning*
 
-## 📋 Description
-A local Gradio-based GUI application for generating captions for images using a deep learning model trained on the Flickr8k dataset. The model uses CNN (InceptionV3) for image encoding and LSTM for caption generation with beam search decoding.
+![Project Status](https://img.shields.io/badge/Status-Completed-brightgreen?style=flat-square)
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat-square)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange?style=flat-square)
+![Gradio](https://img.shields.io/badge/GUI-Gradio-purple?style=flat-square)
 
----
-
-## 🎯 Features
-- ✅ **Upload any image** and get AI-generated captions
-- ✅ **Beam search decoding** for higher quality captions
-- ✅ **Adjustable beam width** (1-5) for quality vs speed tradeoff
-- ✅ **CPU-optimized** - No GPU required
-- ✅ **Modern web interface** with Gradio
-- ✅ **Example images** included for testing
-- ✅ **Processing time display** to monitor performance
+A comprehensive Deep Learning project that combines **Computer Vision** and **Natural Language Processing** to generate descriptive captions for images. This repository contains both the **training pipeline** (Jupyter Notebook) and a **production-ready GUI** (Gradio App).
 
 ---
 
-## 📁 Project Structure
+## � Table of Contents
+- [Project Overview](#-project-overview)
+- [🧠 Part 1: Model Training (The Notebook)](#-part-1-model-training-the-notebook)
+    - [Architecture](#architecture)
+    - [Dataset](#dataset)
+    - [Training Workflow](#training-workflow)
+- [✨ Part 2: Detection App (The GUI)](#-part-2-detection-app-the-gui)
+    - [Features](#features)
+    - [Installation](#installation)
+    - [Usage](#usage)
+- [📂 Project Structure](#-project-structure)
+- [⚖️ License](#-license)
+
+---
+
+## 🚀 Project Overview
+
+This project implements an **Encoder-Decoder** architecture to solve the image captioning problem. The model learns to recognize visual content in an image and translate it into a coherent English sentence.
+
+**Core Technologies:**
+*   **Encoder:** `InceptionV3` (Input: Image $\rightarrow$ Output: 2048-dim feature vector)
+*   **Decoder:** `LSTM` (Input: Sequence $\rightarrow$ Output: Next word probability)
+*   **Fusion:** Feature concatenation method
+*   **Interface:** Web-based GUI using `Gradio`
+
+---
+
+## 🧠 Part 1: Model Training (The Notebook)
+
+The file `Image_Caption_Generator.ipynb` contains the complete end-to-end training pipeline, designed to run on **Google Colab**.
+
+### Architecture
+We utilize a **Merge Architecture**:
+1.  **Image Model (Encoder):**
+    *   Takes an input image (299x299).
+    *   Uses **InceptionV3** (pre-trained on ImageNet) with the top layer removed.
+    *   Extracts a **2048-dimensional** feature vector.
+    *   Passes through a dense layer (256 units).
+2.  **Caption Model (Decoder):**
+    *   Takes partial caption sequences.
+    *   Uses an **Embedding Layer** (256 dims) to handle text input.
+    *   Uses an **LSTM Layer** (256 units) to learn sequence dependencies.
+3.  **Merger:**
+    *   Combines the outputs of both models via addition.
+    *   Final Dense layer with **Softmax activation** to predict the next word from the vocabulary (8780 unique words).
+
+### Dataset
+*   **Source:** [Flickr8k Dataset](https://forms.illinois.edu/sec/1713398)
+*   **Size:** 8,092 images
+*   **Captions:** 5 captions per image (Total: ~40,000 captions)
+*   **Splits:** 6,000 Train | 1,000 Validation | 1,000 Test
+
+### Training Workflow
+1.  **Feature Extraction:** Run all images through InceptionV3 and save features to `image_features.pkl` (Optimization to avoid re-processing).
+2.  **Text Preprocessing:** Lowercase, remove punctuation/numbers, add `<start>`/`<end>` tokens.
+3.  **Tokenization:** Vectorize text to integers.
+4.  **Data Generator:** Yields batches of `(image_feature, partial_sequence) -> next_word` for memory efficiency.
+5.  **Training:** Optimization using Categorical Crossentropy and Adam optimizer.
+
+---
+
+## ✨ Part 2: Detection App (The GUI)
+
+The `app.py` file launches a stunning, dark-themed web interface to test the model in real-time.
+
+### Features
+*   ✅ **Beam Search Decoding:** Selectable beam width (1-5) for higher quality captions compared to greedy search.
+*   ✅ **CPU Optimized:** Runs efficiently on local machines without needing a GPU.
+*   ✅ **Interactive UI:** Drag-and-drop image upload with instant generation.
+*   ✅ **Modern Design:** Glassmorphism aesthetics with smooth animations.
+
+### Installation
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/alshafeay/Image_Caption_Genereator.git
+    cd Image_Caption_GUI
+    ```
+
+2.  **Install Dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3.  **Download Model Weights:**
+    *   Ensure `best_model.keras` and `tokenizer.pkl` are in the directory.
+    *   *Note: First run will download InceptionV3 weights (~90MB).*
+
+### Usage
+
+**Run the application:**
+```bash
+python app.py
 ```
+*   The app will open in your default browser at `http://127.0.0.1:7862`
+*   Upload an image, select **Beam Width** (higher = better quality), and click **Generate Caption**.
+
+---
+
+## � Project Structure
+
+```bash
 Image_Caption_GUI/
+├── Image_Caption_Generator.ipynb  # 📓 Training Notebook (The Brain)
+├── app.py                         # 🚀 Gradio Application (The Interface)
+├── requirements.txt               # 📦 Dependencies
 ├── model/
-│   ├── best_model.keras          # Trained caption generation model
-│   └── image_features.pkl        # Pre-extracted training features (not used in GUI)
-├── examples/
-│   └── *.jpg                     # Sample test images
-├── tokenizer.pkl                 # Word tokenizer
-├── model_config.pkl              # Model configuration
-├── app.py                        # Main Gradio GUI application
-├── requirements.txt              # Python dependencies
-└── README.md                     # This file
+│   ├── best_model.keras           # Trained Model
+│   └── image_features.pkl         # (Optional) Pre-computed features
+├── examples/                      # 🖼️ Sample images for testing
+├── tokenizer.pkl                  # 🔤 Word Tokenizer object
+├── model_config.pkl               # ⚙️ Configuration (max_length, vocab_size)
+└── README.md                      # 📄 This file
 ```
 
 ---
 
-## ⚙️ Installation
-
-### Step 1: Install Python
-Make sure you have **Python 3.8 or higher** installed.
-
-Check version:
-```bash
-python --version
-```
-
-### Step 2: Install Dependencies
-Navigate to this directory and run:
-
-```bash
-pip install -r requirements.txt
-```
-
-**Note:** First install will download InceptionV3 weights (~90 MB) from the internet.
+## ⚖️ License
+This project is for educational purposes as part of a Deep Learning course.
+*   Dataset: [Flickr8k Terms of Use](https://forms.illinois.edu/sec/1713398)
+*   Model: Custom implementation using TensorFlow/Keras.
 
 ---
-
-## 🚀 Usage
-
-### Running the GUI
-
-1. Open terminal/command prompt in this directory
-2. Run:
-   ```bash
-   python app.py
-   ```
-3. Your browser will automatically open at: `http://127.0.0.1:7860`
-4. Upload an image and click "Generate Caption"!
-
-### Beam Width Settings
-- **Beam Width 1**: Fastest (greedy search) - ~2 seconds
-- **Beam Width 3**: Balanced (recommended) - ~3 seconds
-- **Beam Width 5**: Best quality (slower) - ~5 seconds
-
----
-
-## 💻 System Requirements
-
-### Minimum:
-- **RAM**: 4 GB
-- **Storage**: 2 GB free space
-- **CPU**: Any modern processor (no GPU needed)
-- **OS**: Windows, macOS, or Linux
-
-### Recommended:
-- **RAM**: 8 GB or more
-- **CPU**: Multi-core processor for faster inference
-
----
-
-## 🧠 Model Details
-
-### Architecture:
-- **Encoder**: InceptionV3 (pre-trained on ImageNet)
-  - Extracts 2048-dimensional feature vectors
-- **Decoder**: LSTM with 256 units
-  - Embedding dimension: 256
-  - Max caption length: 37 words
-- **Decoding**: Beam search with configurable width
-
-### Training:
-- **Dataset**: Flickr8k (8,000 images with 40,000 captions)
-- **Vocabulary**: 8,780 unique words
-- **Training split**: 6,000 images
-- **Validation split**: 1,000 images
-- **Test split**: 1,000 images
-
----
-
-## 📊 Performance
-
-### Processing Time (on typical CPU):
-- Feature extraction: ~1-2 seconds
-- Caption generation (beam=3): ~1-2 seconds
-- **Total**: ~2-4 seconds per image
-
-### Quality:
-- Uses beam search for better caption quality
-- Higher beam width = better captions but slower
-
----
-
-## 🎨 Example Usage
-
-### Via GUI:
-1. Click "Upload Image" or drag & drop
-2. Adjust beam width slider (default: 3)
-3. Click "Generate Caption"
-4. View your caption!
-
-### Sample Outputs:
-- Dog playing: *"A brown dog is running through the grass"*
-- Beach scene: *"A person is walking on the beach"*
-- City street: *"A man is riding a bike on the street"*
-
----
-
-## 🛠️ Troubleshooting
-
-### Issue: "No module named 'tensorflow'"
-**Solution**: Install dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### Issue: Slow performance
-**Solutions**:
-- Reduce beam width to 1 or 2
-- Close other applications to free up RAM
-- First run is slower (loading models)
-
-### Issue: Port already in use
-**Solution**: Change port in app.py:
-```python
-demo.launch(server_port=7861)  # Change 7860 to 7861
-```
-
----
-
-## 🔧 Advanced Configuration
-
-### Change Port:
-Edit `app.py`, line ~380:
-```python
-demo.launch(server_port=7860)  # Change this number
-```
-
-### Disable Auto-Open Browser:
-Edit `app.py`, line ~380:
-```python
-demo.launch(inbrowser=False)
-```
-
-### Enable Public Sharing:
-Edit `app.py`, line ~380:
-```python
-demo.launch(share=True)  # Creates public link (temporary)
-```
-
----
-
-## 📚 Technical Stack
-
-- **Framework**: TensorFlow 2.x + Keras
-- **GUI**: Gradio 4.x
-- **Image Processing**: Pillow, NumPy
-- **Pre-trained Model**: InceptionV3
-- **Language**: Python 3.8+
-
----
-
-## 📝 Notes
-
-- The GUI runs entirely on your local machine (no data sent to cloud)
-- First run downloads InceptionV3 weights (~90 MB)
-- CPU inference is slower than GPU but works on any computer
-- Model trained on general images (Flickr8k dataset)
-- Best results with natural, well-lit photos
-
----
-
-## 🎓 Academic Use
-
-This project was created as part of a Deep Learning course. The model demonstrates:
-- Transfer learning with InceptionV3
-- Sequence-to-sequence modeling with LSTM
-- Beam search decoding for text generation
-- End-to-end deployment with Gradio
-
----
-
-## 📄 License
-
-For academic/educational purposes.
-
----
-
-## 🤝 Support
-
-If you encounter any issues:
-1. Check the Troubleshooting section above
-2. Verify all files are in correct locations
-3. Ensure Python version is 3.8+
-4. Try reinstalling dependencies
-
----
-
-**Enjoy generating captions! 🎉**
+*Created with ❤️ by Ahmed Alshafeay*
